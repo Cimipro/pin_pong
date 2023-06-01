@@ -25,9 +25,9 @@ class Platphorm(GameSprite):
 #Проверка нажатий на стрелочки
     def update_arrow():
         pass
-#Класс мяча 
+#Класс мяча
 class ball(GameSprite):
-    #Функция обновления обьекта
+    #Функция обновления обьекта мяча
     def update():
         pass
 
