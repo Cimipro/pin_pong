@@ -20,8 +20,9 @@ class GameSprite(sprite.Sprite):
         self.speed = player_speed
 
         self.rect = self.image.get_rect()
-        self.rect.x = player_x
+        self.rect.x =player_x
         self.rect.y = player_y
+
     def reset(self):
         window.blit(self.image,(self.rect.x,self.rect.y))
 #Класс платформы (Игрока)
@@ -43,24 +44,26 @@ class Platphorm(GameSprite):
             self.rect.y += self.speed
 
 #Класс мяча 
-class ball(GameSprite):
+class Ball(GameSprite):
     #Функция обновления обьекта
-    def update(seld):
-        self.rect.y -= self.speed
-
+    def update(self):
+        self.rect.x -= self.speed
+        if self.rect.y >win_widht:
+            game = False
 
 
 #Экземпляры классов
-player_wasd = Platphorm('rocket.png',10,100,65,80,10)
-player_arrow = Platphorm('rocket.png',630,100,65,80,10)
+player_wasd = Platphorm('rocket.png',10,200,65,80,10)
+player_arrow = Platphorm('rocket.png',630,200,65,80,10)
+ball = Ball('rocket.png',400,200,65,80,10)
 #Игровой цикл
 while game:
     #Сделать завешение игры по нажатию крестика
     for e in event.get():
         if e.type == QUIT:
             game = False
-        if finish:
-            window.blit(background,(0,0))
+    if finish:
+        window.blit(background,(0,0))
     #Реализовать отрисовку спрайтов мяча и платформ
     player_wasd.update_wasd()
     player_wasd.reset()
@@ -68,9 +71,10 @@ while game:
     player_arrow.update_arrow()
     player_arrow.reset()
     
+    ball.update()
+    ball.reset()
 
 
     #Проверка взаимодействия обьектов
     display.update()
     time.delay(FPS)
-    
