@@ -17,11 +17,12 @@ class GameSprite(sprite.Sprite):
 
 #Класс платформы (Игрока)
 class Platphorm(GameSprite):
-    #Функция обновления обьекта
+#Функция обновления обьекта
+    #Проверка нажатий на wasd
     def update_wasd():
         self.y - self.player_speed
         pass
-
+#Проверка нажатий на стрелочки
     def update_arrow():
         pass
 #Класс мяча 
