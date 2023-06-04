@@ -6,36 +6,42 @@ win_height = 500
 game = True
 clock = time.Clock()
 FPS = 60
-#Создание игрового окна
-window = display.set_mode((win_widht,win_height))
+# Создание игрового окна
+window = display.set_mode((win_widht, win_height))
 display.set_caption("Шутер")
-background = transform.scale(image.load('background.jpg'),(win_widht,win_height))
-#Сделать пременные отвечающие за написание на экране надписей
-#Основной класс
+background = transform.scale(image.load('background.jpg'), (win_widht, win_height))
+
+
+# Сделать пременные отвечающие за написание на экране надписей
+# Основной класс
 class GameSprite(sprite.Sprite):
-    def __init__(self,player_image,player_x, player_y,size_x,size_y,player_speed):
+    def __init__(self, player_image, player_x, player_y, size_x, size_y, player_speed,player_speed_y):
         super().__init__()
 
-        self.image = transform.scale(image.load(player_image),(size_x,size_y))
+        self.image = transform.scale(image.load(player_image), (size_x, size_y))
         self.speed = player_speed
+        self.speed_y = player_speed_y
 
         self.rect = self.image.get_rect()
-        self.rect.x =player_x
+        self.rect.x = player_x
         self.rect.y = player_y
 
     def reset(self):
-        window.blit(self.image,(self.rect.x,self.rect.y))
-#Класс платформы (Игрока)
+        window.blit(self.image, (self.rect.x, self.rect.y))
+
+
+# Класс платформы (Игрока)
 class Platphorm(GameSprite):
-#Функция обновления обьекта
-    #Управление через WASD
+    # Функция обновления обьекта
+    # Управление через WASD
     def update_wasd(self):
         keys = key.get_pressed()
         if keys[K_w] and self.rect.y > 5:
             self.rect.y -= self.speed
         if keys[K_s] and self.rect.y < win_height - 80:
             self.rect.y += self.speed
-    #Управление через стрелочки
+
+    # Управление через стрелочки
     def update_arrow(self):
         keys = key.get_pressed()
         if keys[K_UP] and self.rect.y > 5:
@@ -43,38 +49,47 @@ class Platphorm(GameSprite):
         if keys[K_DOWN] and self.rect.y < win_height - 80:
             self.rect.y += self.speed
 
-#Класс мяча 
+
+# Класс мяча
 class Ball(GameSprite):
-    #Функция обновления обьекта
+    # Функция обновления обьекта
     def update(self):
         self.rect.x -= self.speed
-        if self.rect.y >win_widht:
-            game = False
+        self.rect.y -= self.speed_y
 
+        if self.rect.x <0 or self.rect.x > win_widht:
+            finish = False
+        
+        if self.rect.y < 0 or self.rect.y > win_height:
+            self.speed *=-1
+            self.speed_y *= -1
+        
+        if sprite.collide_rect(self,player_wasd) or sprite.collide_rect(self,player_arrow):
+            self.speed *= -1
+            self.speed_y *= -1
 
-#Экземпляры классов
-player_wasd = Platphorm('rocket.png',10,200,65,80,10)
-player_arrow = Platphorm('rocket.png',630,200,65,80,10)
-ball = Ball('rocket.png',400,200,65,80,10)
-#Игровой цикл
+# Экземпляры классов
+player_wasd = Platphorm('rocket.png', 10, 200, 65, 80, 10,0)
+player_arrow = Platphorm('rocket.png', 630, 200, 65, 80, 10,0)
+ball = Ball('rocket.png', 400, 200, 65, 80, 10,1)
+# Игровой цикл
 while game:
-    #Сделать завешение игры по нажатию крестика
+    # Сделать завешение игры по нажатию крестика
     for e in event.get():
         if e.type == QUIT:
             game = False
     if finish:
-        window.blit(background,(0,0))
-    #Реализовать отрисовку спрайтов мяча и платформ
+        window.blit(background, (0, 0))
+    # Реализовать отрисовку спрайтов мяча и платформ
     player_wasd.update_wasd()
     player_wasd.reset()
-    
+
     player_arrow.update_arrow()
     player_arrow.reset()
-    
+
     ball.update()
     ball.reset()
 
-
-    #Проверка взаимодействия обьектов
+    # Проверка взаимодействия обьектов
     display.update()
     time.delay(FPS)
