@@ -1,6 +1,6 @@
 from pygame import *
 
-finish = True
+finish = False
 win_widht = 700
 win_height = 500
 game = True
@@ -8,10 +8,12 @@ clock = time.Clock()
 FPS = 60
 # Создание игрового окна
 window = display.set_mode((win_widht, win_height))
-display.set_caption("Шутер")
+display.set_caption("Пинг-понг")
 background = transform.scale(image.load('background.jpg'), (win_widht, win_height))
 
-
+font.init()
+font1 = font.SysFont('Arial',80)
+lose = font1.render('YOU LOSE', True,(255,255,255))
 # Сделать пременные отвечающие за написание на экране надписей
 # Основной класс
 class GameSprite(sprite.Sprite):
@@ -57,9 +59,6 @@ class Ball(GameSprite):
         self.rect.x -= self.speed
         self.rect.y -= self.speed_y
 
-        if self.rect.x <0 or self.rect.x > win_widht:
-            finish = False
-        
         if self.rect.y < 0 or self.rect.y > win_height:
             self.speed *=-1
             self.speed_y *= -1
@@ -71,24 +70,28 @@ class Ball(GameSprite):
 # Экземпляры классов
 player_wasd = Platphorm('rocket.png', 10, 200, 65, 80, 10,0)
 player_arrow = Platphorm('rocket.png', 630, 200, 65, 80, 10,0)
-ball = Ball('rocket.png', 400, 200, 65, 80, 10,1)
+ball = Ball('rocket.png', 400, 200, 65, 80, 10,2)
+
 # Игровой цикл
 while game:
     # Сделать завешение игры по нажатию крестика
     for e in event.get():
         if e.type == QUIT:
             game = False
-    if finish:
+    if not finish:
         window.blit(background, (0, 0))
     # Реализовать отрисовку спрайтов мяча и платформ
-    player_wasd.update_wasd()
-    player_wasd.reset()
+        player_wasd.update_wasd()
+        player_wasd.reset()
 
-    player_arrow.update_arrow()
-    player_arrow.reset()
+        player_arrow.update_arrow()
+        player_arrow.reset()
 
-    ball.update()
-    ball.reset()
+        ball.update()
+        ball.reset()
+        if ball.rect.x <0 or ball.rect.x > win_widht:
+            window.blit(lose, (170, 200))
+            finish = True
 
     # Проверка взаимодействия обьектов
     display.update()
