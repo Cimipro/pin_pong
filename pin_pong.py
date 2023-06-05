@@ -69,8 +69,8 @@ class Ball(GameSprite):
 
 # Экземпляры классов
 player_wasd = Platphorm('rocket.png', 10, 200, 65, 80, 10,0)
-player_arrow = Platphorm('rocket.png', 630, 200, 65, 80, 10,0)
-ball = Ball('rocket.png', 400, 200, 65, 80, 10,2)
+player_arrow = Platphorm('ufo.png', 630, 200, 65, 80, 10,0)
+ball = Ball('asteroid.png', 400, 200, 65, 80, 10,2)
 
 # Игровой цикл
 while game:
@@ -89,7 +89,7 @@ while game:
 
         ball.update()
         ball.reset()
-        if ball.rect.x <0 or ball.rect.x > win_widht:
+        if ball.rect.x <0 or ball.rect.x > win_widht-80:
             window.blit(lose, (170, 200))
             finish = True
 
